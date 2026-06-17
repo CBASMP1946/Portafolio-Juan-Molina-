@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portafolio — Constitución Política | Juan Molina</title>
+  <style>
+    :root {
+      --azul:      #1A3A5C;
+      --azul-med:  #2B5F8E;
+      --azul-cla:  #4A87B8;
+      --azul-tint: #E8F0F8;
+      --beige:     #F7F3EC;
+      --beige-2:   #EDE7DB;
+      --beige-3:   #D8CFBF;
+      --texto:     #1C1C1C;
+      --muted:     #6B6458;
+      --linea:     #D0C8B8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Times New Roman', Times, serif; background: var(--beige); color: var(--texto); line-height: 1.8; }
+
+    .vista { display: none; }
+    .vista.activa { display: block; }
+
+    /* ── BANNER ── */
+    .banner { background: var(--azul); color: #fff; padding: 0; cursor: pointer; border-bottom: 3px solid var(--azul-med); }
+    .banner-inner { max-width: 960px; margin: 0 auto; padding: 28px 32px 22px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .banner-left { display: flex; align-items: center; gap: 18px; }
+    .banner-sigla { width: 52px; height: 52px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .banner h1 { font-size: clamp(1rem, 2.5vw, 1.45rem); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
+    .banner-right { text-align: right; font-size: 0.8rem; opacity: 0.7; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.6; }
+
+    .ruta { background: var(--azul-med); padding: 7px 0; }
+    .ruta-inner { max-width: 960px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; gap: 8px; font-size: 0.78rem; letter-spacing: 0.05em; flex-wrap: wrap; }
+    .ruta a { color: rgba(255,255,255,0.75); text-decoration: none; cursor: pointer; }
+    .ruta a:hover { color: #fff; }
+    .ruta .sep { color: rgba(255,255,255,0.35); }
+    .ruta .act { color: rgba(255,255,255,0.55); font-style: italic; }
+
+    /* ══ CARRUSEL ══ */
+    .carrusel-wrap { position: relative; width: 100%; overflow: hidden; background: #000; }
+    .carrusel-track { display: flex; transition: transform 0.5s ease; height: 320px; }
+    .carrusel-slide { min-width: 100%; height: 320px; position: relative; flex-shrink: 0; }
+    .carrusel-slide img { width: 100%; height: 100%; object-fit: cover; opacity: 0.82; display: block; }
+    .carrusel-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.72));
+      color: #fff; padding: 28px 24px 14px;
+      font-size: 0.82rem; font-style: italic; letter-spacing: 0.03em;
+    }
+    .carrusel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+      color: #fff; width: 40px; height: 40px; cursor: pointer;
+      font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; backdrop-filter: blur(4px); z-index: 10;
+    }
+    .carrusel-btn:hover { background: rgba(255,255,255,0.35); }
+    .carrusel-prev { left: 14px; }
+    .carrusel-next { right: 14px; }
+    .carrusel-dots { position: absolute; bottom: 10px; right: 16px; display: flex; gap: 6px; z-index: 10; }
+    .carrusel-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; border: none; transition: background 0.2s; }
+    .carrusel-dot.on { background: #fff; }
+
+    /* ══ HOME ══ */
+    .home-hero { background: var(--azul); color: #fff; padding: 56px 32px 48px; text-align: center; }
+    .home-hero-eyebrow { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--azul-cla); margin-bottom: 18px; }
+    .home-hero h2 { font-size: clamp(1.5rem, 3.5vw, 2.6rem); font-weight: 400; font-style: italic; max-width: 640px; margin: 0 auto 16px; line-height: 1.35; }
+    .home-hero h2 strong { font-weight: 700; font-style: normal; display: block; font-size: 0.65em; letter-spacing: 0.1em; text-transform: uppercase; color: var(--azul-cla); margin-bottom: 8px; }
+    .home-hero-cita { font-size: 0.85rem; color: rgba(255,255,255,0.5); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 20px; }
+    .home-hero-linea { width: 60px; height: 2px; background: var(--azul-cla); margin: 24px auto; }
+
+    .home-entradas { max-width: 1080px; margin: 0 auto; padding: 56px 32px 80px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+    @media(max-width:900px){ .home-entradas { grid-template-columns: 1fr 1fr; } }
+
+    .entrada { border: 1px solid var(--linea); background: #fff; padding: 36px 30px 30px; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; position: relative; }
+    .entrada::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--azul); transform: scaleX(0); transform-origin: left; transition: transform 0.25s; }
+    .entrada:hover { border-color: var(--azul-cla); box-shadow: 0 4px 20px rgba(26,58,92,0.1); }
+    .entrada:hover::before { transform: scaleX(1); }
+    .entrada-eyebrow { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--azul-cla); margin-bottom: 12px; }
+    .entrada h2 { font-size: 1.4rem; font-weight: 700; color: var(--azul); margin-bottom: 12px; }
+    .entrada p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; margin-bottom: 22px; }
+    .entrada-items { list-style: none; border-top: 1px solid var(--linea); padding-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .entrada-items li { font-size: 0.82rem; color: var(--texto); display: flex; align-items: baseline; gap: 8px; }
+    .entrada-items li::before { content: '—'; color: var(--azul-cla); flex-shrink: 0; font-size: 0.75rem; }
+    .link-accion { display: inline-block; margin-top: 22px; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--azul); border-bottom: 1px solid var(--azul-cla); padding-bottom: 2px; transition: color 0.2s; }
+    .entrada:hover .link-accion { color: var(--azul-cla); }
+
+    /* ══ SECCIÓN LISTAS ══ */
+    .seccion-wrap { max-width: 800px; margin: 0 auto; padding: 56px 32px 80px; }
+    @media(max-width:600px){ .seccion-wrap { padding: 36px 20px 60px; } }
+    .sec-eyebrow { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--azul-cla); margin-bottom: 8px; }
+    .sec-titulo { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; color: var(--azul); border-bottom: 2px solid var(--azul); padding-bottom: 12px; margin-bottom: 36px; }
+
+    .temas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 20px; }
+    .tema-item { border: 1px solid var(--linea); background: #fff; padding: 28px 22px 22px; cursor: pointer; transition: border-color 0.2s, transform 0.18s; }
+    .tema-item:hover { border-color: var(--azul-cla); transform: translateY(-3px); }
+    .tema-letra { font-size: 3rem; font-weight: 900; color: var(--azul); opacity: 0.08; line-height: 1; margin-bottom: 6px; font-style: italic; }
+    .tema-item h3 { font-size: 1rem; font-weight: 700; color: var(--azul); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
+    .tema-item p { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+
+    .pq-lista { display: flex; flex-direction: column; gap: 1px; background: var(--linea); }
+    .pq-item { background: #fff; padding: 22px 28px; cursor: pointer; display: grid; grid-template-columns: 36px 1fr; gap: 18px; align-items: start; transition: background 0.15s; }
+    .pq-item:hover { background: var(--azul-tint); }
+    .pq-n { font-size: 0.72rem; letter-spacing: 0.12em; color: var(--azul-cla); font-weight: 700; padding-top: 3px; }
+    .pq-item h3 { font-size: clamp(0.92rem, 1.8vw, 1rem); font-style: italic; font-weight: 400; color: var(--texto); line-height: 1.55; }
+    .pq-item:hover h3 { color: var(--azul); }
+
+    /* ══ DETALLE ══ */
+    .detalle-hero { background: var(--azul); color: #fff; padding: 48px 32px 40px; }
+    .detalle-hero-inner { max-width: 800px; margin: 0 auto; }
+    .detalle-eyebrow { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--azul-cla); margin-bottom: 10px; }
+    .detalle-hero h2 { font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 700; letter-spacing: 0.03em; line-height: 1.3; }
+    .detalle-hero.pq h2 { font-weight: 400; font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.4rem); }
+    .detalle-hero-linea { width: 40px; height: 2px; background: var(--azul-cla); margin-top: 20px; }
+
+    .detalle-cuerpo { max-width: 800px; margin: 0 auto; padding: 48px 32px 80px; }
+    @media(max-width:600px){ .detalle-cuerpo { padding: 32px 20px 60px; } }
+
+    .btn-volver { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--azul); border: 1px solid var(--azul); padding: 7px 16px; background: transparent; cursor: pointer; font-family: 'Times New Roman', serif; transition: background 0.2s, color 0.2s; margin-bottom: 36px; }
+    .btn-volver:hover { background: var(--azul); color: #fff; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 32px; }
+    .tag { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border: 1px solid var(--azul-cla); color: var(--azul-med); background: var(--azul-tint); }
+
+    .detalle-cuerpo h3 { font-size: 0.88rem; font-weight: 700; color: var(--azul); letter-spacing: 0.03em; margin: 32px 0 10px; text-transform: uppercase; }
+    .detalle-cuerpo p { font-size: 0.96rem; color: var(--texto); margin-bottom: 14px; text-align: justify; line-height: 1.85; }
+    .cita-bloque { border-left: 3px solid var(--azul-cla); margin: 28px 0; padding: 16px 24px; background: var(--azul-tint); }
+    .cita-bloque p { font-style: italic; color: var(--azul); font-size: 1rem; margin-bottom: 6px; text-align: left; }
+    .cita-bloque cite { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--azul-cla); font-style: normal; }
+
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 28px; font-size: 0.88rem; }
+    th { background: var(--azul); color: #fff; padding: 10px 16px; text-align: left; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.75rem; }
+    td { padding: 10px 16px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+    tr:nth-child(even) td { background: var(--azul-tint); }
+
+    /* etiqueta carrusel dentro de contenido */
+    .carrusel-seccion { margin: 32px 0; }
+    .carrusel-label { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--azul-cla); margin-bottom: 8px; font-weight: 700; }
+    .carrusel-wrap.compacto .carrusel-track { height: 240px; }
+    .carrusel-wrap.compacto .carrusel-slide { height: 240px; }
+
+    footer { background: var(--azul); color: rgba(255,255,255,0.65); padding: 28px 32px; }
+    .footer-inner { max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 0.78rem; letter-spacing: 0.07em; text-transform: uppercase; }
+    .footer-inner strong { color: #fff; }
+  </style>
+</head>
+<body>
+
+<header class="banner" onclick="irA('inicio')">
+  <div class="banner-inner">
+    <div class="banner-left">
+      <div class="banner-sigla" onclick="event.stopPropagation(); irA('autor')" title="Sobre el autor" style="cursor:pointer;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Universidad_del_Tolima_Logo_forma_2.png/250px-Universidad_del_Tolima_Logo_forma_2.png" style="width:32px;height:32px;object-fit:contain;"></div>
+        </div>
+      <h1>Portafolio<br>Constitución Política</h1>
+    </div>
+    <div class="banner-right">
+      Elaborado por<br><strong style="color:#fff;font-size:1rem;letter-spacing:0.04em;text-transform:none;">Juan Molina</strong>
+    </div>
+  </div>
+</header>
+
+<nav class="ruta">
+  <div class="ruta-inner" id="breadcrumb">
+    <a onclick="irA('inicio')">Inicio</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════ INICIO ═══════════════════ -->
+<div class="vista activa" id="v-inicio">
+
+  <!-- Carrusel Hero -->
+  <div class="carrusel-wrap" id="c-hero">
+    <div class="carrusel-track" id="ct-hero">
+      <div class="carrusel-slide">
+        <img src="https://radionacional-v3.s3.amazonaws.com/s3fs-public/node/article/field_image/COLPD_14896.jpg" alt="Capitolio Nacional de Colombia" loading="lazy">
+        <div class="carrusel-caption">Capitolio Nacional de Colombia, sede del Congreso de la República</div>
+      </div>
+      <div class="carrusel-slide">
+        <img src="https://cdn.colombia.com/sdi/2013/11/27/plaza-de-bolivar-714091.jpg" alt="Plaza de Bolívar, Bogotá" loading="lazy">
+        <div class="carrusel-caption">Plaza de Bolívar, Bogotá — corazón cívico y político de Colombia</div>
+      </div>
+      <div class="carrusel-slide">
+        <img src="https://imagenes2.eltiempo.com/files/og_thumbnail/uploads/2021/06/15/60c8dd62e3e83.jpeg" alt="Palacio de Justicia" loading="lazy">
+        <div class="carrusel-caption">Palacio de Justicia, sede de la Corte Suprema y el Consejo de Estado</div>
+      </div>
+      <div class="carrusel-slide">
+        <img src="https://intranet.cali.gov.co/wp-content/uploads/2025/07/WhatsApp-Image-2025-07-19-at-8.53.30-AM.jpeg" alt="Bandera de Colombia" loading="lazy">
+        <div class="carrusel-caption">Colombia — Estado Social de Derecho desde la Constitución de 1991</div>
+      </div>
+    </div>
+    <button class="carrusel-btn carrusel-prev" onclick="moverCarrusel('hero',-1)">&#8592;</button>
+    <button class="carrusel-btn carrusel-next" onclick="moverCarrusel('hero',1)">&#8594;</button>
+    <div class="carrusel-dots" id="cd-hero"></div>
+  </div>
+
+  <section class="home-hero">
+    <p class="home-hero-eyebrow">República de Colombia · C.P.C. 1991</p>
+    <h2>
+      <strong>Estado Social de Derecho</strong>
+      Democrática, participativa y pluralista, fundada en el respeto de la dignidad humana.
+    </h2>
+    <div class="home-hero-linea"></div>
+    <p class="home-hero-cita">Artículo 1 — Constitución Política de Colombia</p>
+  </section>
+
+  <div class="home-entradas">
+    <div class="entrada" onclick="irA('temas')">
+      <p class="entrada-eyebrow">Sección I</p>
+      <h2>Temas</h2>
+      <p>Cinco unidades que articulan el estudio de la Constitución Política, desde los fundamentos del poder hasta los derechos ciudadanos.</p>
+      <ul class="entrada-items">
+        <li>Unidad 1 · Política</li>
+        <li>Unidad 2 · Estado</li>
+        <li>Unidad 3 · Constitucionalidad</li>
+        <li>Unidad 4 · Democracia</li>
+        <li>Unidad 5 · Derechos</li>
+      </ul>
+      <span class="link-accion">Explorar temas →</span>
+    </div>
+    <div class="entrada" onclick="irA('preguntas')">
+      <p class="entrada-eyebrow">Sección II</p>
+      <h2>Preguntas Generadoras</h2>
+      <p>Cinco preguntas que orientan la reflexión crítica sobre el texto constitucional y su vigencia en la realidad colombiana.</p>
+      <ul class="entrada-items">
+        <li>La política y el Estado colombiano</li>
+        <li>Evolución del Estado constitucional</li>
+        <li>Continuidades y rupturas del 91</li>
+        <li>Democracia y derechos fundamentales</li>
+        <li>Derechos y participación ciudadana</li>
+      </ul>
+      <span class="link-accion">Explorar preguntas →</span>
+    </div>
+    <div class="entrada" onclick="irA('caso')">
+        <p class="entrada-eyebrow">Sección III</p>
+          <h2>Estudio de Caso</h2>
+            <p>Un caso real del mundo del fútbol que ilustra los conceptos de Estado, constitucionalidad y rendición de cuentas: el escándalo de corrupción en la FIFA.</p>
+              <ul class="entrada-items">
+                  <li>Contexto del FIFA Gate</li>
+                      <li>Actores e instituciones involucradas</li>
+                          <li>Marco legal y judicial aplicado</li>
+                              <li>Lecciones de gobernanza global</li>
+                                </ul>
+                                  <span class="link-accion">Ver estudio de caso →</span>
+                                  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TEMAS ═══════════════════ -->
+<div class="vista" id="v-temas">
+  <div class="seccion-wrap">
+    <button class="btn-volver" onclick="irA('inicio')">← Inicio</button>
+    <p class="sec-eyebrow">Sección I</p>
+    <h2 class="sec-titulo">Temas — Unidades 1 a 5</h2>
+    <div class="temas-grid">
+      <div class="tema-item" onclick="irA('tema-1')"><div class="tema-letra">I</div><h3>Política</h3><p>El poder, la ciudadanía y la organización de los asuntos colectivos en el Estado colombiano.</p></div>
+      <div class="tema-item" onclick="irA('tema-2')"><div class="tema-letra">II</div><h3>Estado</h3><p>Del Estado absolutista al Estado constitucional: evolución, estructura y legitimidad.</p></div>
+      <div class="tema-item" onclick="irA('tema-3')"><div class="tema-letra">III</div><h3>Constitucionalidad</h3><p>El tránsito de la Constitución de 1886 a la Carta de 1991: rupturas, continuidades y legado.</p></div>
+      <div class="tema-item" onclick="irA('tema-4')"><div class="tema-letra">IV</div><h3>Democracia</h3><p>Los principios democráticos y el sistema de derechos fundamentales y DESC en Colombia.</p></div>
+      <div class="tema-item" onclick="irA('tema-5')"><div class="tema-letra">V</div><h3>Derechos</h3><p>La Constitución como carta de derechos: mecanismos de protección y participación ciudadana.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PREGUNTAS ═══════════════════ -->
+<div class="vista" id="v-preguntas">
+  <div class="seccion-wrap">
+    <button class="btn-volver" onclick="irA('inicio')">← Inicio</button>
+    <p class="sec-eyebrow">Sección II</p>
+    <h2 class="sec-titulo">Preguntas Generadoras</h2>
+    <div class="pq-lista">
+      <div class="pq-item" onclick="irA('pq-1')"><span class="pq-n">01</span><h3>¿Cómo interpretar el concepto de política y sus repercusiones en el Estado Colombiano?</h3></div>
+      <div class="pq-item" onclick="irA('pq-2')"><span class="pq-n">02</span><h3>¿De qué manera ha evolucionado la interpretación del Estado y cómo se entiende un Estado constitucional?</h3></div>
+      <div class="pq-item" onclick="irA('pq-3')"><span class="pq-n">03</span><h3>¿Cuáles fueron las continuidades y rupturas de los cambios constitucionales de Colombia?</h3></div>
+      <div class="pq-item" onclick="irA('pq-4')"><span class="pq-n">04</span><h3>¿Qué son los principios básicos de la democracia y cómo identificar los derechos fundamentales, los derechos Sociales, Económicos y Culturales?</h3></div>
+      <div class="pq-item" onclick="irA('pq-5')"><span class="pq-n">05</span><h3>¿Por qué la CPC se fundamenta en la defensa de derechos y la promoción de mecanismos de participación ciudadana?</h3></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TEMA 1 · POLÍTICA ═══════════════════ -->
+<div class="vista" id="v-tema-1">
+  <div class="detalle-hero"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Unidad 1</p><h2>Política</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('temas')">← Temas</button>
+    <div class="tags"><span class="tag">Poder político</span><span class="tag">Ciudadanía</span><span class="tag">Gobernabilidad</span><span class="tag">Participación</span><span class="tag">Bien común</span><span class="tag">Legitimidad</span></div>
+    <h3>El concepto de política</h3>
+    <p>La política designa el conjunto de prácticas, discursos e instituciones mediante los cuales una sociedad organiza su vida colectiva, distribuye el poder y gestiona los conflictos. Aristóteles fue el primero en sistematizarla filosóficamente al definir al ser humano como <em>zoon politikón</em>: un ser cuya realización plena solo es posible en la comunidad política, la <em>polis</em>.</p>
+    <p>En la modernidad, el concepto se complejiza. Maquiavelo la separa de la moral y la vincula al ejercicio efectivo del poder; Hobbes la entiende como el mecanismo que supera el estado de guerra natural; Locke y Rousseau la fundan en el pacto social y la voluntad colectiva. Max Weber la define como la orientación del Estado mediante el monopolio legítimo de la coacción.</p>
+    <h3>Historia de la politica</h3>
+    <p>Todo comenzó en las ciudades-estado de Mesopotamia y Grecia antigua, donde surgieron las primeras formas de gobierno organizado. Atenas experimentó con la democracia directa, mientras Roma construyó una república con instituciones que siguen influyendo al mundo occidental hasta hoy. Durante siglos, el poder estuvo concentrado en reyes, emperadores e iglesias. 
+    Fue con la Ilustración en los siglos XVII y XVIII cuando pensadores como Locke, Rousseau y Montesquieu comenzaron a cuestionar ese orden, sembrando las ideas de soberanía popular, separación de poderes y derechos individuales. Esas ideas alimentaron revoluciones como la americana (1776) y la francesa (1789), que redefinieron lo que significa gobernar. 
+    El siglo XX trajo consigo los grandes experimentos ideológicos: el fascismo, el comunismo y la democracia liberal se enfrentaron en guerras y guerras frías. Al final del siglo, la democracia se consolidó como el sistema dominante, aunque no sin tensiones ni contradicciones.</p>
+    <!-- Elfsight Slider | Politica -->
+     <script src="https://elfsightcdn.com/platform.js" async></script>
+     <div class="elfsight-app-80f51e73-da44-4276-99a5-4a10a7ecc463" data-elfsight-app-lazy></div>
+    <div class="cita-bloque"><p>"La soberanía reside exclusivamente en el pueblo, del cual emana el poder público."</p><cite>— Artículo 3, C.P.C. 1991</cite></div>
+    <b>La Política en Colombia</b>
+    <p>Colombia tiene una historia política marcada por la violencia, la polarización y, al mismo tiempo, una notable resiliencia institucional. Desde la independencia en 1810, el país quedó atrapado en un conflicto permanente entre liberales y conservadores, que no era solo ideológico sino también regional y económico. 
+    Ese bipartidismo derivó en guerras civiles a lo largo del siglo XIX y culminó en la tragedia del 9 de abril de 1948, cuando el asesinato de Jorge Eliécer Gaitán desató El Bogotazo y abrió una era conocida como La Violencia.
+    Para frenar el derramamiento de sangre, los dos partidos firmaron el Frente Nacional (1958–1974), un acuerdo para alternarse el poder. Funcionó en lo inmediato, pero excluyó a otros movimientos y dejó abonado el terreno para las guerrillas. 
+    En los años 60 nacieron las FARC, el ELN y otras organizaciones que se fusionaron con el narcotráfico en las décadas siguientes, convirtiendo a Colombia en uno de los conflictos armados más largos del mundo.</p>
+    <b>La Constitución de 1991</b>
+    <p>La Constitución de 1886 llevaba más de 100 años vigente y ya no respondía a la realidad del país. Colombia vivía una crisis brutal: narcotráfico en su apogeo, guerrillas activas, paramilitarismo, corrupción y una ciudadanía completamente desconectada del Estado. 
+    Fue un movimiento estudiantil, la llamada "séptima papeleta", el que empujó la idea de convocar una Asamblea Nacional Constituyente por fuera de los canales tradicionales. Fue una transformación profunda. 
+    Antes, Colombia era un Estado confesional, centralista y con derechos muy limitados. La nueva constitución lo cambió todo:</p>
+    <h3>Repercusiones en el Estado colombiano</h3>
+    <p>La Constitución de 1991 transformó la manera en que se concibe la política en Colombia: amplió los actores legítimos, multiplicó los escenarios de participación y reconoció el pluralismo como valor fundante. La política dejó de ser patrimonio exclusivo de las élites tradicionales para convertirse en una práctica accesible a todos los ciudadanos.</p>
+    <h3>Corrientes del pensamiento político</h3>
+    <table>
+      <thead><tr><th>Corriente</th><th>Representante</th><th>Aporte central</th><th>Época</th></tr></thead>
+      <tbody>
+        <tr><td>Clásica</td><td>Aristóteles</td><td>La política como fin ético de la comunidad</td><td>s. IV a.C.</td></tr>
+        <tr><td>Realista</td><td>Maquiavelo</td><td>Separación entre política y moral</td><td>s. XVI</td></tr>
+        <tr><td>Contractualista</td><td>Locke / Rousseau</td><td>El pacto social como fundamento de la autoridad</td><td>s. XVII-XVIII</td></tr>
+        <tr><td>Liberal</td><td>J.S. Mill</td><td>Libertades individuales y representación</td><td>s. XIX</td></tr>
+        <tr><td>Crítica</td><td>Gramsci / Foucault</td><td>Hegemonía, poder y resistencia social</td><td>s. XX</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════ TEMA 2 · ESTADO ═══════════════════ -->
+<div class="vista" id="v-tema-2">
+  <div class="detalle-hero"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Unidad 2</p><h2>Estado</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('temas')">← Temas</button>
+    <div class="tags"><span class="tag">Estado-nación</span><span class="tag">Soberanía</span><span class="tag">Territorio</span><span class="tag">Estado Social</span><span class="tag">Control constitucional</span></div>
+    <h3>¿Qué es el Estado?</h3>
+    <p>El Estado es la organización política que ejerce soberanía sobre un territorio y una población determinada. Max Weber ofreció la definición más influyente: el Estado es "aquella comunidad humana que, en el interior de un determinado territorio, reclama para sí el monopolio de la violencia física legítima."</p>
+    <h3>Evolución histórica del Estado</h3>
+    <table>
+      <thead><tr><th>Modelo</th><th>Período</th><th>Características principales</th></tr></thead>
+      <tbody>
+        <tr><td>Estado absolutista</td><td>s. XVI–XVIII</td><td>Poder concentrado en el monarca sin límites jurídicos</td></tr>
+        <tr><td>Estado liberal</td><td>s. XIX</td><td>Separación de poderes; derechos civiles y políticos</td></tr>
+        <tr><td>Estado de bienestar</td><td>s. XX (1930–1980)</td><td>Provisión de servicios sociales; redistribución</td></tr>
+        <tr><td>Estado constitucional</td><td>s. XX–XXI</td><td>Supremacía de la Constitución; derechos exigibles</td></tr>
+      </tbody>
+    </table>
+    <h3>El Estado Social de Derecho colombiano</h3>
+    <p>La Constitución de 1991 define a Colombia como un "Estado Social de Derecho". Esta fórmula combina el Estado de Derecho (que limita el poder con normas jurídicas) y el Estado Social (que impone al Estado obligaciones positivas de garantizar educación, salud y vivienda). No basta con no violar los derechos: el Estado debe actuar activamente para hacerlos efectivos.</p>
+    <div class="cita-bloque"><p>"Colombia es un Estado social de derecho, organizado en forma de República unitaria, descentralizada, con autonomía de sus entidades territoriales, democrática, participativa y pluralista."</p><cite>— Artículo 1, C.P.C. 1991</cite></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TEMA 3 · CONSTITUCIONALIDAD ═══════════════════ -->
+<div class="vista" id="v-tema-3">
+  <div class="detalle-hero"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Unidad 3</p><h2>Constitucionalidad</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('temas')">← Temas</button>
+    <div class="tags"><span class="tag">C.P.C. 1886</span><span class="tag">C.P.C. 1991</span><span class="tag">Asamblea Constituyente</span><span class="tag">Control constitucional</span><span class="tag">Tutela</span></div>
+
+    <!-- CARRUSEL CONSTITUCIONALIDAD -->
+    <div class="carrusel-seccion">
+      <p class="carrusel-label">Galería — Historia constitucional de Colombia</p>
+      <div class="carrusel-wrap compacto" id="c-const">
+        <div class="carrusel-track" id="ct-const">
+          <div class="carrusel-slide">
+            <img src="https://babel.banrepcultural.org/iiif/2/p17054coll10:3925/full/730,/0/default.jpg" alt="Constitucion de Cucuta 1821" loading="lazy">
+            <div class="carrusel-caption">La constitucion de 1821</div>
+          </div>
+          <div class="carrusel-slide">
+            <img src="https://www.comisiondelaverdad.co/sites/default/files/2022-10/nhh13fotolaconstituyented8i1.jpeg" alt="Constituyente" loading="lazy">
+            <div class="carrusel-caption">La Constituyente - Un logro de la gente</div>
+          </div>
+          <div class="carrusel-slide">
+            <img src="https://cloudfront-us-east-1.images.arcpublishing.com/infobae/6YIEQGN3UZFL3AEE7AOQRMACXQ.jpg" alt="Corte Constitucional" loading="lazy">
+            <div class="carrusel-caption">Sala Plena de la Corte Constitucional - La guardiana del pacto social y defensora incansable de la supremacía de la Constitución</div>
+          </div>
+          <div class="carrusel-slide">
+            <img src="http://media.cnn.com/api/v1/images/stellar/prod/cnne-1237032-03-time-out-worlds-best-cities-2022-medellin.jpg?c=original" alt="Medellín" loading="lazy">
+            <div class="carrusel-caption">Medellín — ciudad símbolo de la transformación social que impulsó la Constitución de 1991</div>
+          </div>
+        </div>
+        <button class="carrusel-btn carrusel-prev" onclick="moverCarrusel('const',-1)">&#8592;</button>
+        <button class="carrusel-btn carrusel-next" onclick="moverCarrusel('const',1)">&#8594;</button>
+        <div class="carrusel-dots" id="cd-const"></div>
+      </div>
+    </div>
+
+    <h3>¿Qué es la constitucionalidad?</h3>
+    <p>La constitucionalidad es el principio según el cual todas las normas del ordenamiento jurídico deben ser conformes con la Constitución. Una ley o decreto que contradiga la Constitución puede ser declarado inconstitucional y, por tanto, nulo. Este principio convierte a la Constitución en la "norma de normas".</p>
+    <h3>La Constitución de 1886: contexto y limitaciones</h3>
+    <p>La Constitución de 1886 rigió Colombia durante 105 años. Fue un texto centralista, confesional y restrictivo en derechos. Para finales de los años 80, la crisis era evidente: narcotráfico, paramilitarismo, guerrilla y corrupción pusieron de manifiesto que la Constitución vigente era incapaz de responder a los desafíos del momento.</p>
+    <h3>La Asamblea Constituyente de 1991</h3>
+    <p>La convocatoria a la Asamblea fue en sí misma una ruptura. La Asamblea fue plural y representativa: participaron indígenas, afrocolombianos, excombatientes del M-19, mujeres y representantes históricamente excluidos. El resultado fue una Constitución de 380 artículos considerada una de las más avanzadas en materia de derechos.</p>
+    <div class="cita-bloque"><p>"La Constitución es norma de normas. En todo caso de incompatibilidad entre la Constitución y la ley u otra norma jurídica, se aplicarán las disposiciones constitucionales."</p><cite>— Artículo 4, C.P.C. 1991</cite></div>
+    <h3>Continuidades y rupturas</h3>
+    <table>
+      <thead><tr><th>Dimensión</th><th>C.P.C. 1886</th><th>C.P.C. 1991</th><th>Tipo</th></tr></thead>
+      <tbody>
+        <tr><td>Organización territorial</td><td>República unitaria centralizada</td><td>República unitaria descentralizada</td><td>Continuidad parcial</td></tr>
+        <tr><td>Religión y laicidad</td><td>Estado confesional católico</td><td>Estado laico y pluralista</td><td>Ruptura</td></tr>
+        <tr><td>Catálogo de derechos</td><td>Reducido, formal</td><td>Amplio, exigible mediante tutela</td><td>Ruptura</td></tr>
+        <tr><td>Participación política</td><td>Bipartidismo cerrado</td><td>Pluripartidismo y participación directa</td><td>Ruptura</td></tr>
+        <tr><td>Control constitucional</td><td>Corte Suprema de Justicia</td><td>Corte Constitucional especializada</td><td>Ruptura</td></tr>
+        <tr><td>Identidad nacional</td><td>Homogénea e hispano-católica</td><td>Pluriétnica y multicultural</td><td>Ruptura</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════ TEMA 4 · DEMOCRACIA ═══════════════════ -->
+<div class="vista" id="v-tema-4">
+  <div class="detalle-hero"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Unidad 4</p><h2>Democracia</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('temas')">← Temas</button>
+    <div class="tags"><span class="tag">Soberanía popular</span><span class="tag">Pluralismo</span><span class="tag">Separación de poderes</span><span class="tag">Derechos fundamentales</span><span class="tag">DESC</span></div>
+
+    <!-- CARRUSEL DEMOCRACIA -->
+    <div class="carrusel-seccion">
+      <p class="carrusel-label">Galería — Democracia y participación en Colombia</p>
+      <div class="carrusel-wrap compacto" id="c-demo">
+        <div class="carrusel-track" id="ct-demo">
+          <div class="carrusel-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Capitolio_Nacional_de_Colombia.jpg/1280px-Capitolio_Nacional_de_Colombia.jpg" alt="Congreso de Colombia" loading="lazy">
+            <div class="carrusel-caption">Congreso de la República — sede del poder legislativo y la democracia representativa</div>
+          </div>
+          <div class="carrusel-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Bolivar_square_bogota.jpg/1280px-Bolivar_square_bogota.jpg" alt="Plaza de Bolívar movilización" loading="lazy">
+            <div class="carrusel-caption">Plaza de Bolívar — escenario histórico de movilizaciones y expresión democrática ciudadana</div>
+          </div>
+          <div class="carrusel-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/1280px-Flag_of_Colombia.svg.png" alt="Colombia democrática" loading="lazy">
+            <div class="carrusel-caption">Colombia — Estado democrático, participativo y pluralista según el Artículo 1 de la CPC</div>
+          </div>
+        </div>
+        <button class="carrusel-btn carrusel-prev" onclick="moverCarrusel('demo',-1)">&#8592;</button>
+        <button class="carrusel-btn carrusel-next" onclick="moverCarrusel('demo',1)">&#8594;</button>
+        <div class="carrusel-dots" id="cd-demo"></div>
+      </div>
+    </div>
+
+    <h3>¿Qué es la democracia?</h3>
+    <p>La democracia es el sistema político en el que el poder emana del pueblo y se ejerce en su nombre. Más que una forma de gobierno, es un conjunto de principios que organizan la vida colectiva: garantiza que las decisiones se adopten con la participación de los afectados, que las minorías sean protegidas y que el poder sea limitado y controlable.</p>
+    <h3>Principios democráticos en la CPC</h3>
+    <table>
+      <thead><tr><th>Principio</th><th>Contenido</th><th>Artículo</th></tr></thead>
+      <tbody>
+        <tr><td>Soberanía popular</td><td>El poder emana del pueblo</td><td>Art. 3</td></tr>
+        <tr><td>Separación de poderes</td><td>División para evitar concentración y permitir controles</td><td>Art. 113</td></tr>
+        <tr><td>Sufragio universal</td><td>Todos los ciudadanos tienen derecho a votar en igualdad</td><td>Art. 258</td></tr>
+        <tr><td>Pluralismo</td><td>Se protege la diversidad política, étnica, cultural</td><td>Art. 1, 7</td></tr>
+        <tr><td>Participación ciudadana</td><td>Los ciudadanos intervienen directamente en decisiones</td><td>Art. 103</td></tr>
+      </tbody>
+    </table>
+    <h3>Los derechos fundamentales</h3>
+    <p>Los derechos fundamentales (Arts. 11–41) son aquellos inherentes a la persona y de aplicación inmediata. La acción de tutela (Art. 86) es el mecanismo por excelencia para su protección: cualquier persona puede interponerla ante cualquier juez en un término de diez días.</p>
+    <h3>Los derechos Sociales, Económicos y Culturales</h3>
+    <p>Los DESC (Arts. 42–77) incluyen el trabajo, la educación, la salud, la vivienda digna y la seguridad social. Su realización es progresiva. La Corte Constitucional ha desarrollado la doctrina de la "conexidad": cuando la vulneración de un DESC amenaza un derecho fundamental, procede la tutela inmediata.</p>
+    <div class="cita-bloque"><p>"El Estado reconoce, sin discriminación alguna, la primacía de los derechos inalienables de la persona."</p><cite>— Artículo 5, C.P.C. 1991</cite></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TEMA 5 · DERECHOS ═══════════════════ -->
+<div class="vista" id="v-tema-5">
+  <div class="detalle-hero"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Unidad 5</p><h2>Derechos</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('temas')">← Temas</button>
+    <div class="tags"><span class="tag">Dignidad humana</span><span class="tag">Tutela</span><span class="tag">Habeas corpus</span><span class="tag">Habeas data</span><span class="tag">Acción popular</span><span class="tag">Participación</span></div>
+
+    <!-- CARRUSEL DERECHOS -->
+    <div class="carrusel-seccion">
+      <p class="carrusel-label">Galería — Derechos, ciudadanía y diversidad</p>
+      <div class="carrusel-wrap compacto" id="c-der">
+        <div class="carrusel-track" id="ct-der">
+          <div class="carrusel-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Medellin_city.jpg/1280px-Medellin_city.jpg" alt="Medellín transformación urbana" loading="lazy">
+            <div class="carrusel-caption">Medellín — ejemplo de transformación urbana guiada por los derechos sociales y la participación</div>
+          </div>
+          <div class="carrusel-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Bolivar_square_bogota.jpg/1280px-Bolivar_square_bogota.jpg" alt="Ciudadanía activa" loading="lazy">
+            <div class="carrusel-caption">Bogotá — espacio de ciudadanía activa y ejercicio de los mecanismos de participación</div>
+          </div>
+          <div class="carrusel-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Palacio_de_Justicia_de_Colombia.jpg/1280px-Palacio_de_Justicia_de_Colombia.jpg" alt="Justicia constitucional" loading="lazy">
+            <div class="carrusel-caption">Palacio de Justicia — sede donde se dirimen las disputas sobre derechos fundamentales</div>
+          </div>
+          <div class="carrusel-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/1280px-Flag_of_Colombia.svg.png" alt="Bandera Colombia derechos" loading="lazy">
+            <div class="carrusel-caption">Colombia pluriétnica y multicultural — la CPC reconoce y protege la diversidad como riqueza nacional</div>
+          </div>
+        </div>
+        <button class="carrusel-btn carrusel-prev" onclick="moverCarrusel('der',-1)">&#8592;</button>
+        <button class="carrusel-btn carrusel-next" onclick="moverCarrusel('der',1)">&#8594;</button>
+        <div class="carrusel-dots" id="cd-der"></div>
+      </div>
+    </div>
+
+    <h3>La dignidad humana como fundamento</h3>
+    <p>La Constitución de 1991 sitúa la dignidad humana en el centro de todo el ordenamiento jurídico. La Corte Constitucional ha desarrollado una robusta jurisprudencia sobre la dignidad como valor, principio y derecho autónomo, con tres dimensiones: el derecho a vivir bien, el derecho a vivir sin humillaciones y el derecho a la autodeterminación.</p>
+    <h3>Clasificación de los derechos</h3>
+    <table>
+      <thead><tr><th>Categoría</th><th>Capítulo</th><th>Artículos</th><th>Ejemplos</th></tr></thead>
+      <tbody>
+        <tr><td>Derechos fundamentales</td><td>I</td><td>11–41</td><td>Vida, igualdad, intimidad, libre expresión, debido proceso</td></tr>
+        <tr><td>Derechos sociales, económicos y culturales</td><td>II</td><td>42–77</td><td>Familia, trabajo, educación, salud, vivienda, cultura</td></tr>
+        <tr><td>Derechos colectivos y del ambiente</td><td>III</td><td>78–82</td><td>Ambiente sano, espacio público, patrimonio cultural</td></tr>
+      </tbody>
+    </table>
+    <h3>Mecanismos de protección</h3>
+    <table>
+      <thead><tr><th>Mecanismo</th><th>Art.</th><th>¿Qué protege?</th><th>Plazo</th></tr></thead>
+      <tbody>
+        <tr><td>Acción de tutela</td><td>86</td><td>Derechos fundamentales ante vulneración inmediata</td><td>10 días</td></tr>
+        <tr><td>Acción popular</td><td>88</td><td>Derechos e intereses colectivos</td><td>Variable</td></tr>
+        <tr><td>Acción de cumplimiento</td><td>87</td><td>Cumplimiento de leyes y actos administrativos</td><td>Variable</td></tr>
+        <tr><td>Habeas corpus</td><td>30</td><td>Libertad personal frente a detención ilegal</td><td>36 horas</td></tr>
+        <tr><td>Habeas data</td><td>15</td><td>Derecho a conocer y rectificar datos personales</td><td>10 días</td></tr>
+      </tbody>
+    </table>
+    <h3>Mecanismos de participación ciudadana</h3>
+    <p>El artículo 103 consagra siete mecanismos: el voto, el plebiscito, el referendo, la consulta popular, el cabildo abierto, la iniciativa legislativa y la revocatoria del mandato. Estos mecanismos configuran una democracia de alta intensidad donde el ciudadano es un actor permanente.</p>
+    <div class="cita-bloque"><p>"Son mecanismos de participación del pueblo en ejercicio de su soberanía: el voto, el plebiscito, el referendo, la consulta popular, el cabildo abierto, la iniciativa legislativa y la revocatoria del mandato."</p><cite>— Artículo 103, C.P.C. 1991</cite></div>
+  </div>
+</div>
+
+<!-- ═══ PREGUNTAS (contenido compacto) ═══ -->
+<div class="vista" id="v-pq-1">
+  <div class="detalle-hero pq"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Pregunta Generadora 01</p><h2>¿Cómo interpretar el concepto de política y sus repercusiones en el Estado Colombiano?</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('preguntas')">← Preguntas</button>
+    <h3>Planteamiento</h3>
+    <p>Interpretar el concepto de política exige superar la visión reduccionista que la asocia exclusivamente con el ejercicio del gobierno o las actividades de los partidos. En un sentido amplio, la política es la forma en que una sociedad decide colectivamente sobre sus asuntos comunes: quién manda, con qué fines y bajo qué reglas.</p>
+    <h3>La política como práctica social</h3>
+    <p>Hannah Arendt propuso entender la política como el espacio de aparición pública donde los seres humanos actúan en conjunto. Desde esta perspectiva, la política es ante todo diálogo, conflicto y acuerdo. Esta visión es la que inspira el carácter "participativo y pluralista" que la CPC de 1991 le atribuye al Estado colombiano en su artículo primero.</p>
+    <h3>Repercusiones concretas en Colombia</h3>
+    <p>Una interpretación amplia del concepto de política ha tenido repercusiones estructurales: la descentralización política (Arts. 286-311), el reconocimiento de la diversidad étnica (Art. 7), los mecanismos de participación directa (Art. 103) y el fortalecimiento del control ciudadano (Art. 40) son resultados de entender la política como un asunto de todos.</p>
+    <div class="cita-bloque"><p>"Todo ciudadano tiene derecho a participar en la conformación, ejercicio y control del poder político."</p><cite>— Artículo 40, C.P.C. 1991</cite></div>
+    <h3>Síntesis</h3>
+    <p>La política, entendida en su dimensión más rica, es al mismo tiempo el problema y la solución de la organización social. La Constitución de 1991 es el resultado de una apuesta política colectiva: la de un país que, en medio de la violencia, decidió construir un nuevo pacto social fundado en el diálogo, los derechos y la participación.</p>
+  </div>
+</div>
+
+<div class="vista" id="v-pq-2">
+  <div class="detalle-hero pq"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Pregunta Generadora 02</p><h2>¿De qué manera ha evolucionado la interpretación del Estado y cómo se entiende un Estado constitucional?</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('preguntas')">← Preguntas</button>
+    <h3>Planteamiento</h3>
+    <p>La historia del Estado moderno es la historia de una lenta transformación: de una institución concebida para preservar el orden, a una organización jurídico-política comprometida con la garantía de los derechos y el bienestar de todos sus miembros.</p>
+    <h3>Del Estado absolutista al Estado constitucional</h3>
+    <p>El Estado absolutista concentraba el poder en el monarca sin límites efectivos. Las revoluciones liberales introdujeron el Estado de Derecho. El siglo XX trajo el Estado Social. Finalmente, el Estado constitucional agrega la supremacía de la Constitución sobre todos los poderes, incluyendo el legislativo, y el control judicial de constitucionalidad como mecanismo de garantía.</p>
+    <h3>¿Qué caracteriza al Estado constitucional?</h3>
+    <p>En el Estado constitucional, la Constitución no es solo un límite político: es una norma jurídica directamente aplicable. Los derechos fundamentales no dependen del legislador para ser exigibles; los jueces pueden inaplicar leyes que los vulneren; y existe la Corte Constitucional que custodia la coherencia del sistema.</p>
+    <div class="cita-bloque"><p>"Es deber de los nacionales y los extranjeros en Colombia acatar la Constitución y las leyes, y respetar y obedecer a las autoridades."</p><cite>— Artículo 4, C.P.C. 1991</cite></div>
+    <h3>Síntesis</h3>
+    <p>El Estado constitucional colombiano representa el intento de articular en un solo modelo la legalidad, la legitimidad y la justicia. Su mayor desafío no es teórico sino práctico: lograr que las promesas constitucionales se traduzcan en realidades concretas para todos los colombianos.</p>
+  </div>
+</div>
+
+<div class="vista" id="v-pq-3">
+  <div class="detalle-hero pq"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Pregunta Generadora 03</p><h2>¿Cuáles fueron las continuidades y rupturas de los cambios constitucionales de Colombia?</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('preguntas')">← Preguntas</button>
+    <h3>Planteamiento</h3>
+    <p>Toda transformación constitucional es a la vez conservación y cambio. La pregunta por las continuidades y rupturas entre la Constitución de 1886 y la de 1991 nos habla de qué estructuras de poder lograron sobrevivir al proceso constituyente y cuáles fueron efectivamente transformadas.</p>
+    <h3>Las rupturas: lo que sí cambió</h3>
+    <p>Colombia pasó de ser un Estado confesional a uno laico y pluralista; de reconocer solo derechos formales a consagrar derechos exigibles mediante la tutela; de ignorar la diversidad étnica a reconocerla como riqueza nacional; y de un sistema bipartidista cerrado a uno pluralista abierto. La creación de la Corte Constitucional fue quizás la ruptura institucional más profunda.</p>
+    <h3>Las continuidades: lo que persistió</h3>
+    <p>Las continuidades se concentran en la estructura básica del Estado: la forma republicana, el presidencialismo, la organización unitaria del territorio y las tres ramas del poder público se mantuvieron. Estas continuidades reflejan que ciertos marcos institucionales son difíciles de transformar y que los intereses que los sostienen eran suficientemente fuertes.</p>
+    <div class="cita-bloque"><p>"El Estado reconoce y protege la diversidad étnica y cultural de la Nación colombiana."</p><cite>— Artículo 7, C.P.C. 1991</cite></div>
+    <h3>Síntesis</h3>
+    <p>La CPC de 1991 fue una revolución jurídica dentro de la continuidad institucional. El gran desafío ha sido lograr que las rupturas textuales se traduzcan en rupturas reales en las condiciones de vida de los colombianos: que los derechos proclamados sean derechos garantizados.</p>
+  </div>
+</div>
+
+<div class="vista" id="v-pq-4">
+  <div class="detalle-hero pq"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Pregunta Generadora 04</p><h2>¿Qué son los principios básicos de la democracia y cómo identificar los derechos fundamentales, los derechos Sociales, Económicos y Culturales?</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('preguntas')">← Preguntas</button>
+    <h3>Planteamiento</h3>
+    <p>La democracia no es solo un procedimiento para elegir gobernantes: es un sistema de principios que organizan la convivencia política. Identificar esos principios y entender cómo se reflejan en el sistema de derechos de la CPC colombiana es fundamental para ejercer una ciudadanía informada.</p>
+    <h3>Cómo identificar los derechos fundamentales</h3>
+    <p>Los derechos fundamentales se identifican por tres criterios: su ubicación en el Título II, Capítulo I; su carácter de aplicación inmediata; y la posibilidad de protegerlos mediante la acción de tutela. La Corte Constitucional también ha reconocido como fundamentales derechos no listados expresamente cuando su conexión con la dignidad humana así lo exige.</p>
+    <h3>Cómo identificar los DESC</h3>
+    <p>Los DESC se ubican en el Capítulo II y se caracterizan por su naturaleza prestacional: para su realización, el Estado debe destinar recursos y diseñar políticas públicas. Su exigibilidad es progresiva, pero el Estado no puede retroceder en los niveles de protección ya alcanzados (prohibición de regresividad).</p>
+    <div class="cita-bloque"><p>"La educación es un derecho de la persona y un servicio público que tiene una función social."</p><cite>— Artículo 67, C.P.C. 1991</cite></div>
+    <h3>Síntesis</h3>
+    <p>Los principios democráticos y el sistema de derechos son las dos caras de la misma moneda constitucional. La CPC de 1991 consagra una democracia que garantiza los derechos de todos, incluidos quienes no forman parte de la mayoría del momento.</p>
+  </div>
+</div>
+
+<div class="vista" id="v-pq-5">
+  <div class="detalle-hero pq"><div class="detalle-hero-inner"><p class="detalle-eyebrow">Pregunta Generadora 05</p><h2>¿Por qué la CPC se fundamenta en la defensa de derechos y la promoción de mecanismos de participación ciudadana?</h2><div class="detalle-hero-linea"></div></div></div>
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('preguntas')">← Preguntas</button>
+    <h3>Planteamiento</h3>
+    <p>¿Por qué una Constitución centra su arquitectura en los derechos y la participación? La respuesta es histórica, política y ética. Colombia llegó a 1991 con una deuda enorme con sus ciudadanos: décadas de violencia, exclusión y silenciamiento exigían un nuevo pacto que pusiera a la persona en el centro del Estado.</p>
+    <h3>La legitimidad basada en derechos</h3>
+    <p>Un Estado que no garantiza los derechos de sus ciudadanos carece de legitimidad moral. La CPC de 1991 optó por fundar la legitimidad del Estado colombiano en el reconocimiento y la garantía de los derechos fundamentales. Esto implica que el Estado no existe para sí mismo: existe para servir a las personas.</p>
+    <h3>La participación como garantía real</h3>
+    <p>Los derechos sin participación son promesas que el poder puede incumplir sin consecuencias. La participación ciudadana es el mecanismo que convierte a los ciudadanos en vigilantes activos del cumplimiento de la Constitución. Cuando los ciudadanos pueden interponer tutelas, revocar mandatos y convocar referendos, el Estado sabe que los incumplimientos tienen costos políticos reales.</p>
+    <div class="cita-bloque"><p>"Las autoridades de la República están instituidas para proteger a todas las personas residentes en Colombia, en su vida, honra, bienes, creencias, y demás derechos y libertades."</p><cite>— Artículo 2, C.P.C. 1991</cite></div>
+    <h3>Síntesis</h3>
+    <p>La CPC de 1991 se fundamenta en los derechos y la participación porque sin ellos no hay Estado legítimo, no hay democracia real y no hay convivencia pacífica posible. Conocerlos, comprenderlos y exigir su cumplimiento es el acto político más importante que puede realizar un ciudadano colombiano.</p>
+  </div>
+</div>
+<div class="vista" id="v-autor">
+  <div class="detalle-hero">
+    <div class="detalle-hero-inner">
+      <p class="detalle-eyebrow">Información del autor</p>
+      <h2>Juan Molina</h2>
+      <div class="detalle-hero-linea"></div>
+    </div>
+  </div>
+
+  <div class="detalle-cuerpo">
+    <button class="btn-volver" onclick="irA('inicio')">← Inicio</button>
+    <div style="background:#fff; border:1px solid var(--linea); padding:40px 36px; max-width:520px;">
+      <table style="font-size:0.97rem;">
+        <tr>
+          <td style="padding:12px 20px 12px 0; color:var(--azul-cla); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:700; white-space:nowrap;">Nombre</td>
+          <td style="padding:12px 0; font-weight:700; color:var(--azul);">Juan Cebastian Molina Perilla</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 20px 12px 0; color:var(--azul-cla); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:700;">Carrera</td>
+          <td style="padding:12px 0; color:var(--texto);">Ingenieria de sistemas</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 20px 12px 0; color:var(--azul-cla); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:700;">Semestre</td>
+          <td style="padding:12px 0; color:var(--texto);">Semestre 4</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 20px 12px 0; color:var(--azul-cla); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:700;">Materia</td>
+          <td style="padding:12px 0; color:var(--texto);">Constitución Política</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 20px 12px 0; color:var(--azul-cla); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:700;">Docente</td>
+          <td style="padding:12px 0; color:var(--texto);">Laura Fernanda Rodriguez Mendez</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- ═══════════════════ ESTUDIO DE CASO ═══════════════════ -->
+<div class="vista" id="v-caso">
+
+  <!-- Carrusel banner -->
+    <div class="carrusel-wrap" id="c-caso">
+      <div class="carrusel-track" id="ct-caso">
+              <div class="carrusel-slide">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/FIFA-Headquarter.jpg" alt="Sede de la FIFA en Zúrich" loading="lazy">
+                              <div class="carrusel-caption">Sede de la FIFA en Zúrich, Suiza — centro del escándalo de corrupción de 2015</div>
+                                    </div>
+                                          <div class="carrusel-slide">
+                                                  <img src="https://www.lanacion.com.ar/resizer/v2/joseph-TFJ335LFFNB5NH52TXZPPSARSE.jpg?auth=d9d20777dad3e98b726546804dd3c613276780c71c9533959d45f8452c6ba9f5&width=1200&height=800&quality=70&smart=true" alt="Justicia internacional" loading="lazy">
+                                                          <div class="carrusel-caption">La justicia de EE. UU. y Suiza lideraron las investigaciones penales contra dirigentes de la FIFA</div>
+                                                                </div>
+                                                                      <div class="carrusel-slide">
+                                                                              <img src="https://www.elespectador.com/resizer/v2/JUYCGLKDLRCY7N4PWAQY7S7KEY.jpeg?auth=44de582bb33383e24d40947358e21b2bcc2d159ad42ff67f2f71b46f72cbae9d&width=920&height=613&smart=true&quality=60" alt="Federaciones nacionales" loading="lazy">
+                                                                                      <div class="carrusel-caption">Varias federaciones nacionales de fútbol resultaron implicadas en el entramado de sobornos</div>
+                                                                                            </div>
+                                                                                                </div>
+                                                                                                    <button class="carrusel-btn carrusel-prev" onclick="moverCarrusel('caso',-1)">&#8592;</button>
+                                                                                                        <button class="carrusel-btn carrusel-next" onclick="moverCarrusel('caso',1)">&#8594;</button>
+                                                                                                            <div class="carrusel-dots" id="cd-caso"></div>
+                                                                                                              </div>
+                                                                                                              
+                                                                                                                <div class="detalle-hero">
+                                                                                                                    <div class="detalle-hero-inner">
+                                                                                                                          <p class="detalle-eyebrow">Estudio de Caso</p>
+                                                                                                                                <h2>El FIFA Gate: corrupción y gobernanza en el fútbol mundial</h2>
+                                                                                                                                      <div class="detalle-hero-linea"></div>
+                                                                                                                                          </div>
+                                                                                                                                            </div>
+                                                                                                                                            
+                                                                                                                                              <div class="detalle-cuerpo">
+                                                                                                                                                  <button class="btn-volver" onclick="irA('inicio')">← Inicio</button>
+                                                                                                                                                      <div class="tags">
+                                                                                                                                                            <span class="tag">FIFA</span><span class="tag">Corrupción</span><span class="tag">Rendición de cuentas</span>
+                                                                                                                                                                  <span class="tag">Derecho internacional</span><span class="tag">Gobernanza</span>
+                                                                                                                                                                      </div>
+                                                                                                                                                                      
+                                                                                                                                                                          <h3>Contexto del caso</h3>
+                                                                                                                                                                              <p>En mayo de 2015, el Departamento de Justicia de Estados Unidos, junto con las autoridades suizas, destapó una red de corrupción dentro de la FIFA que involucraba sobornos millonarios para la asignación de derechos de transmisión, patrocinios y, según las investigaciones, la elección de sedes de Copas del Mundo. Varios altos dirigentes de federaciones de fútbol en América y el Caribe fueron arrestados en un hotel de Zúrich, justo antes del congreso anual de la organización.</p>
+                                                                                                                                                                              
+                                                                                                                                                                                  <h3>Actores e instituciones involucradas</h3>
+                                                                                                                                                                                      <table>
+                                                                                                                                                                                            <thead><tr><th>Actor</th><th>Rol en el caso</th></tr></thead>
+                                                                                                                                                                                                  <tbody>
+                                                                                                                                                                                                          <tr><td>FIFA</td><td>Organización investigada por corrupción sistémica en sus dirigentes</td></tr>
+                                                                                                                                                                                                                  <tr><td>Departamento de Justicia (EE. UU.)</td><td>Lideró la investigación penal bajo la ley RICO (crimen organizado)</td></tr>
+                                                                                                                                                                                                                          <tr><td>Ministerio Público de Suiza</td><td>Investigó la elección de sedes de los Mundiales de 2018 y 2022</td></tr>
+                                                                                                                                                                                                                                  <tr><td>Federaciones nacionales</td><td>Varios dirigentes de CONCACAF y CONMEBOL fueron acusados o condenados</td></tr>
+                                                                                                                                                                                                                                        </tbody>
+                                                                                                                                                                                                                                            </table>
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                <h3>Marco legal aplicado</h3>
+                                                                                                                                                                                                                                                    <p>El caso es un ejemplo notable de jurisdicción extraterritorial: Estados Unidos procesó a dirigentes de organizaciones extranjeras invocando que parte de las transacciones financieras pasaron por bancos estadounidenses. Esto plantea preguntas relevantes sobre la relación entre soberanía estatal, instituciones privadas transnacionales y mecanismos de control jurídico cuando estas últimas carecen de un Estado que las regule directamente.</p>
+                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                        <blockquote style="background:var(--azul-tint); border-left:4px solid var(--azul-cla); margin:16px 0; padding:12px 18px; font-style:italic; color:var(--azul-med);">
+                                                                                                                                                                                                                                                              "Los acusados corrompieron el desarrollo y crecimiento del fútbol en Estados Unidos y en otros lugares en beneficio propio."
+                                                                                                                                                                                                                                                                    <cite style="display:block; font-size:0.8rem; margin-top:6px; font-style:normal; opacity:0.75;">— Fiscalía General de Estados Unidos, comunicado de 2015</cite>
+                                                                                                                                                                                                                                                                        </blockquote>
+                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                            <h3>Lecciones de gobernanza global</h3>
+                                                                                                                                                                                                                                                                                <p>El FIFA Gate evidenció los límites de la autorregulación en organizaciones internacionales que manejan enormes recursos económicos sin estar sujetas a un marco constitucional claro. A diferencia de un Estado, la FIFA no tiene una "Constitución" en sentido jurídico-político, sino estatutos internos cuya capacidad de autocontrol resultó insuficiente. El caso impulsó reformas internas de transparencia y límites de mandato para sus directivos.</p>
+                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                    <h3>Relación con los conceptos del portafolio</h3>
+                                                                                                                                                                                                                                                                                        <p>Este caso permite trasladar las categorías estudiadas —Estado, constitucionalidad, democracia y derechos— a un escenario no estatal pero igualmente relevante: una organización que gobierna un fenómeno global como el fútbol. Sirve para reflexionar sobre cómo los principios de transparencia, separación de poderes y rendición de cuentas, centrales en cualquier Estado constitucional, también deberían aplicarse a las organizaciones que ejercen poder a escala mundial.</p>
+                                                                                                                                                                                                                                                                                          </div>
+                                                                                                                                                                                                                                                                                          </div>-->
+<footer>
+  <div class="footer-inner">
+    <div><strong>Portafolio de Constitución Política</strong><br>Elaborado por <strong>Juan Molina</strong></div>
+    <div style="text-align:right;">C.P.C. 1991<br>"Norma de normas" — Art. 4</div>
+  </div>
+</footer>
+
+<script>
+  // ── NAVEGACIÓN ──
+  const rutas = {
+    'inicio':    [{l:'Inicio',id:'inicio'}],
+    'temas':     [{l:'Inicio',id:'inicio'},{l:'Temas',id:'temas'}],
+    'preguntas': [{l:'Inicio',id:'inicio'},{l:'Preguntas Generadoras',id:'preguntas'}],
+    'tema-1':    [{l:'Inicio',id:'inicio'},{l:'Temas',id:'temas'},{l:'Unidad 1 · Política'}],
+    'tema-2':    [{l:'Inicio',id:'inicio'},{l:'Temas',id:'temas'},{l:'Unidad 2 · Estado'}],
+    'tema-3':    [{l:'Inicio',id:'inicio'},{l:'Temas',id:'temas'},{l:'Unidad 3 · Constitucionalidad'}],
+    'tema-4':    [{l:'Inicio',id:'inicio'},{l:'Temas',id:'temas'},{l:'Unidad 4 · Democracia'}],
+    'tema-5':    [{l:'Inicio',id:'inicio'},{l:'Temas',id:'temas'},{l:'Unidad 5 · Derechos'}],
+    'pq-1':      [{l:'Inicio',id:'inicio'},{l:'Preguntas',id:'preguntas'},{l:'Pregunta 1'}],
+    'pq-2':      [{l:'Inicio',id:'inicio'},{l:'Preguntas',id:'preguntas'},{l:'Pregunta 2'}],
+    'pq-3':      [{l:'Inicio',id:'inicio'},{l:'Preguntas',id:'preguntas'},{l:'Pregunta 3'}],
+    'pq-4':      [{l:'Inicio',id:'inicio'},{l:'Preguntas',id:'preguntas'},{l:'Pregunta 4'}],
+    'pq-5':      [{l:'Inicio',id:'inicio'},{l:'Preguntas',id:'preguntas'},{l:'Pregunta 5'}],
+    'caso': [{l:'Inicio',id:'inicio'},{l:'Estudio de Caso'}],
+    'autor': [{l:'Inicio',id:'inicio'},{l:'Sobre el autor'}],
+  };
+
+  function irA(id) {
+    document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
+    const vista = document.getElementById('v-' + id);
+    if (vista) vista.classList.add('activa');
+    const pasos = rutas[id] || [];
+    const bc = document.getElementById('breadcrumb');
+    bc.innerHTML = pasos.map((p, i) => {
+      const last = i === pasos.length - 1;
+      if (last && !p.id) return `<span class="act">${p.l}</span>`;
+      return `<a onclick="irA('${p.id}')">${p.l}</a>`;
+    }).join('<span class="sep">›</span>');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // ── CARRUSELES ──
+  const carruseles = {};
+
+  function initCarrusel(id) {
+    const track = document.getElementById('ct-' + id);
+    if (!track) return;
+    const slides = track.querySelectorAll('.carrusel-slide');
+    const total = slides.length;
+    carruseles[id] = { idx: 0, total, track, intervalId: null };
+
+    // Dots
+    const dotsWrap = document.getElementById('cd-' + id);
+    if (dotsWrap) {
+      dotsWrap.innerHTML = '';
+      slides.forEach((_, i) => {
+        const d = document.createElement('button');
+        d.className = 'carrusel-dot' + (i === 0 ? ' on' : '');
+        d.onclick = () => goToSlide(id, i);
+        dotsWrap.appendChild(d);
+      });
+    }
+
+    // Autoplay
+    carruseles[id].intervalId = setInterval(() => moverCarrusel(id, 1), 4500);
+  }
+
+  function goToSlide(id, idx) {
+    const c = carruseles[id];
+    if (!c) return;
+    c.idx = idx;
+    c.track.style.transform = `translateX(-${idx * 100}%)`;
+    // Dots
+    const dots = document.querySelectorAll(`#cd-${id} .carrusel-dot`);
+    dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+    // Reiniciar autoplay
+    clearInterval(c.intervalId);
+    c.intervalId = setInterval(() => moverCarrusel(id, 1), 4500);
+  }
+
+  function moverCarrusel(id, dir) {
+    const c = carruseles[id];
+    if (!c) return;
+    let next = (c.idx + dir + c.total) % c.total;
+    goToSlide(id, next);
+  }
+
+  // Inicializar todos al cargar
+  window.addEventListener('load', () => {
+    ['hero', 'const', 'demo', 'der','caso'].forEach(initCarrusel);
+  });
+
+  irA('inicio');
+</script>
+</body>
+</html>
+HTMLEOF
